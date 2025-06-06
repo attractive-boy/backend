@@ -20,6 +20,10 @@ app.use(express.json());
 // 路由
 app.use('/api', authRoutes);
 
+//健康检查
+app.get('/health', (req, res) => {
+  res.json({ status: 'ok' });
+});
 
 // 启动服务器
 app.listen(port, () => {
