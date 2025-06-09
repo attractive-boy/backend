@@ -5,6 +5,8 @@ const knex = require('knex');
 const knexConfig = require('../knexfile');
 const { Model } = require('objection');
 const authRoutes = require('./routes/authRoutes');
+const taskRoutes = require('./routes/taskRoutes');
+const userRoutes = require('./routes/userRoutes');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -19,6 +21,8 @@ app.use(express.json());
 
 // 路由
 app.use('/api', authRoutes);
+app.use('/api', taskRoutes);
+app.use('/api', userRoutes);
 
 //健康检查
 app.get('/health', (req, res) => {
