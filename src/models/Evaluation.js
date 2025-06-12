@@ -1,20 +1,20 @@
 const { Model } = require('objection');
 
-class Task extends Model {
+class Evaluation extends Model {
   static get tableName() {
-    return 'task';
+    return 'evaluation';
   }
 
   static get jsonSchema() {
     return {
       type: 'object',
-      required: ['title', 'content', 'classId'],
+      required: ['taskId', 'userId'],
 
       properties: {
         id: { type: 'integer' },
-        title: { type: 'string', minLength: 1, maxLength: 255 },
-        content: { type: 'string' },
-        classId: { type: 'integer' },
+        taskId: { type: 'integer' },
+        userId: { type: 'integer' },
+        summary: { type: ['string', 'null'] },
         createdAt: { type: 'string', format: 'date-time' },
         updatedAt: { type: 'string', format: 'date-time' }
       }
@@ -23,37 +23,37 @@ class Task extends Model {
 
   // 定义关系
   static get relationMappings() {
-    const Class = require('./Class');
-    const Evaluation = require('./Evaluation');
+    const Task = require('./Task');
+    const User = require('./User');
     const Score = require('./Score');
 
     return {
-      class: {
+      task: {
         relation: Model.BelongsToOneRelation,
-        modelClass: Class,
+        modelClass: Task,
         join: {
-          from: 'task.classId',
-          to: 'class.id'
+          from: 'evaluation.taskId',
+          to: 'task.id'
         }
       },
-      evaluations: {
-        relation: Model.HasManyRelation,
-        modelClass: Evaluation,
+      user: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: User,
         join: {
-          from: 'task.id',
-          to: 'evaluation.taskId'
+          from: 'evaluation.userId',
+          to: 'user.id'
         }
       },
       scores: {
         relation: Model.HasManyRelation,
         modelClass: Score,
         join: {
-          from: 'task.id',
-          to: 'score.taskId'
+          from: 'evaluation.id',
+          to: 'score.evaluationId'
         }
       }
     };
   }
 }
 
-module.exports = Task;
+module.exports = Evaluation; 

@@ -1,19 +1,19 @@
 const { Model } = require('objection');
 
-class Task extends Model {
+class Student extends Model {
   static get tableName() {
-    return 'task';
+    return 'student';
   }
 
   static get jsonSchema() {
     return {
       type: 'object',
-      required: ['title', 'content', 'classId'],
+      required: ['name', 'classId'],
 
       properties: {
         id: { type: 'integer' },
-        title: { type: 'string', minLength: 1, maxLength: 255 },
-        content: { type: 'string' },
+        name: { type: 'string', minLength: 1, maxLength: 255 },
+        category: { type: ['string', 'null'] },
         classId: { type: 'integer' },
         createdAt: { type: 'string', format: 'date-time' },
         updatedAt: { type: 'string', format: 'date-time' }
@@ -24,7 +24,6 @@ class Task extends Model {
   // 定义关系
   static get relationMappings() {
     const Class = require('./Class');
-    const Evaluation = require('./Evaluation');
     const Score = require('./Score');
 
     return {
@@ -32,28 +31,20 @@ class Task extends Model {
         relation: Model.BelongsToOneRelation,
         modelClass: Class,
         join: {
-          from: 'task.classId',
+          from: 'student.classId',
           to: 'class.id'
-        }
-      },
-      evaluations: {
-        relation: Model.HasManyRelation,
-        modelClass: Evaluation,
-        join: {
-          from: 'task.id',
-          to: 'evaluation.taskId'
         }
       },
       scores: {
         relation: Model.HasManyRelation,
         modelClass: Score,
         join: {
-          from: 'task.id',
-          to: 'score.taskId'
+          from: 'student.id',
+          to: 'score.studentId'
         }
       }
     };
   }
 }
 
-module.exports = Task;
+module.exports = Student; 

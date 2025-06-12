@@ -4,9 +4,12 @@ const cors = require('cors');
 const knex = require('knex');
 const knexConfig = require('../knexfile');
 const { Model } = require('objection');
+const path = require('path');
 const authRoutes = require('./routes/authRoutes');
 const taskRoutes = require('./routes/taskRoutes');
 const userRoutes = require('./routes/userRoutes');
+const classRoutes = require('./routes/classRoutes');
+const cozeRoutes = require('./routes/cozeRoutes');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -19,10 +22,15 @@ Model.knex(db);
 app.use(cors());
 app.use(express.json());
 
+// 配置静态文件服务
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+
 // 路由
 app.use('/api', authRoutes);
 app.use('/api', taskRoutes);
 app.use('/api', userRoutes);
+app.use('/api', classRoutes);
+app.use('/api/coze', cozeRoutes);
 
 //健康检查
 app.get('/health', (req, res) => {
@@ -32,5 +40,5 @@ app.get('/health', (req, res) => {
 
 // 启动服务器
 app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+  console.log(`服务器运行在端口 ${port}`);
 }); 
