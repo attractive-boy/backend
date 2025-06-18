@@ -1,4 +1,5 @@
 const CozeConfig = require('../models/CozeConfig');
+const Prompt = require('../models/Prompt');
 
 // 获取所有 Coze 配置
 const getAllCozeConfigs = async (req, res) => {
@@ -133,10 +134,51 @@ const deleteCozeConfig = async (req, res) => {
   }
 };
 
+// 获取课堂点评提示词
+const getPromptSummary = async (req, res) => {
+  try {
+    // 从数据库获取类型为'summary'的提示词
+    const prompt = await Prompt.query()
+      .where('type', 'summary')
+      .where('isActive', true)
+      .orderBy('createdAt', 'desc')
+      .first();
+
+    if (!prompt) {
+      // 如果没有找到提示词，返回默认提示词
+      const defaultPrompt = ``;
+
+      // 创建默认提示词
+      await Prompt.query().insert({
+        type: 'summary',
+        content: defaultPrompt,
+        isActive: true
+      });
+
+      return res.json({
+        code: 0,
+        data: defaultPrompt
+      });
+    }
+
+    res.json({
+      code: 0,
+      data: prompt.content
+    });
+  } catch (error) {
+    res.status(500).json({
+      code: 1,
+      message: '获取提示词失败',
+      error: error.message
+    });
+  }
+};
+
 module.exports = {
   getAllCozeConfigs,
   getCozeConfigById,
   createCozeConfig,
   updateCozeConfig,
-  deleteCozeConfig
+  deleteCozeConfig,
+  getPromptSummary
 }; 

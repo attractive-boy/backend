@@ -5,7 +5,8 @@ const {
   getCozeConfigById,
   createCozeConfig,
   updateCozeConfig,
-  deleteCozeConfig
+  deleteCozeConfig,
+  getPromptSummary
 } = require('../controllers/cozeController');
 
 // 获取所有 Coze 配置
@@ -22,5 +23,8 @@ router.put('/configs/:id', updateCozeConfig);
 
 // 删除 Coze 配置
 router.delete('/configs/:id', deleteCozeConfig);
+
+// 获取课堂点评提示词
+router.get('/prompt/summary', getPromptSummary);
 
 module.exports = router; 
